@@ -21,15 +21,12 @@ async function discordFetch(endpoint, options = {}) {
   return res.json();
 }
 
-async function sendMessage(channelId, payload) {
-  return discordFetch(`/channels/${channelId}/messages`, {
-    method: 'POST',
-    body: JSON.stringify(payload),
-  });
-}
-
 async function getGuild(guildId) {
   return discordFetch(`/guilds/${guildId}?with_counts=true`);
+}
+
+async function getGuildChannels(guildId) {
+  return discordFetch(`/guilds/${guildId}/channels`);
 }
 
 async function getGuildMember(guildId, userId) {
@@ -43,24 +40,25 @@ async function kickMember(guildId, userId) {
 }
 
 async function banMember(guildId, userId, reason) {
-  return discordFetch(`/guilds/${guildId}/bans/${userId}?delete_message_days=0`, {
+  return discordFetch(`/guilds/${guildId}/bans/${userId}`, {
     method: 'PUT',
-    body: JSON.stringify({ reason }),
+    body: JSON.stringify({ delete_message_seconds: 0, reason }),
   });
 }
 
-async function muteMember(guildId, userId) {
+async function timeoutMember(guildId, userId, durationMs) {
+  const until = new Date(Date.now() + durationMs).toISOString();
   return discordFetch(`/guilds/${guildId}/members/${userId}`, {
     method: 'PATCH',
-    body: JSON.stringify({ mute: true }),
+    body: JSON.stringify({ communication_disabled_until: until }),
   });
 }
 
 module.exports = {
-  sendMessage,
   getGuild,
+  getGuildChannels,
   getGuildMember,
   kickMember,
   banMember,
-  muteMember,
+  timeoutMember,
 };

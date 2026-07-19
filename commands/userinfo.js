@@ -12,9 +12,24 @@ module.exports = {
     },
   ],
   async execute(interaction) {
-    const targetUserId = interaction.data.options?.find(o => o.name === 'usuario')?.value || interaction.member.user.id;
-    const member = await getGuildMember(interaction.guild_id, targetUserId);
-    const user = member.user;
+    let member, user;
+
+    if (interaction.data.options?.length) {
+      const targetId = interaction.data.options.find(o => o.name === 'usuario')?.value;
+      const resolvedUser = interaction.data.resolved?.users?.[targetId];
+      const resolvedMember = interaction.data.resolved?.members?.[targetId];
+
+      if (resolvedMember && resolvedUser) {
+        member = { ...resolvedMember, user: resolvedUser };
+        user = resolvedUser;
+      } else {
+        member = await getGuildMember(interaction.guild_id, targetId);
+        user = member.user;
+      }
+    } else {
+      member = await getGuildMember(interaction.guild_id, interaction.member.user.id);
+      user = member.user;
+    }
 
     const roles = member.roles
       .filter(r => r !== interaction.guild_id)

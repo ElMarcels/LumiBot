@@ -1,10 +1,13 @@
-const { getGuild } = require('../utils/discord-api');
+const { getGuild, getGuildChannels } = require('../utils/discord-api');
 
 module.exports = {
   name: 'serverinfo',
   description: 'Muestra información del servidor',
   async execute(interaction) {
-    const guild = await getGuild(interaction.guild_id);
+    const [guild, channels] = await Promise.all([
+      getGuild(interaction.guild_id),
+      getGuildChannels(interaction.guild_id),
+    ]);
 
     const createdAt = new Date(guild.created_at).toLocaleDateString('es-ES', {
       year: 'numeric',
@@ -24,6 +27,9 @@ module.exports = {
       ? `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png?size=1024`
       : null;
 
+    const textChannels = channels.filter(c => c.type === 0).length;
+    const voiceChannels = channels.filter(c => c.type === 2).length;
+
     const embed = {
       title: `🏠 ${guild.name}`,
       color: 0xD500F9,
@@ -31,8 +37,8 @@ module.exports = {
         { name: 'ID', value: guild.id, inline: true },
         { name: 'Creado', value: createdAt, inline: true },
         { name: 'Miembros', value: `${guild.approximate_member_count}`, inline: true },
-        { name: 'Canales de texto', value: `${guild.channels?.filter(c => c.type === 0).length || 0}`, inline: true },
-        { name: 'Canales de voz', value: `${guild.channels?.filter(c => c.type === 2).length || 0}`, inline: true },
+        { name: 'Canales de texto', value: `${textChannels}`, inline: true },
+        { name: 'Canales de voz', value: `${voiceChannels}`, inline: true },
         { name: 'Roles', value: `${guild.roles?.length || 0}`, inline: true },
         { name: 'Nivel de verificación', value: verificationLevels[guild.verification_level] || 'Desconocido', inline: true },
       ],

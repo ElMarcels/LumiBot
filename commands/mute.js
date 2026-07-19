@@ -1,9 +1,9 @@
-const { muteMember, getGuildMember } = require('../utils/discord-api');
+const { timeoutMember, getGuildMember } = require('../utils/discord-api');
 
 module.exports = {
   name: 'mute',
-  description: 'Silencia a un usuario en el servidor',
-  default_member_permissions: '4', // MANAGE_ROLES (needed for timeout)
+  description: 'Silencia a un usuario en el servidor (timeout 10 minutos)',
+  default_member_permissions: '1073741824',
   options: [
     {
       name: 'usuario',
@@ -57,12 +57,13 @@ module.exports = {
       };
     }
 
-    await muteMember(interaction.guild_id, targetUserId);
+    const TEN_MINUTES = 10 * 60 * 1000;
+    await timeoutMember(interaction.guild_id, targetUserId, TEN_MINUTES);
 
     return {
       embeds: [{
         title: '🔇 Usuario silenciado',
-        description: `**<@${targetUserId}>** ha sido silenciado en el servidor.`,
+        description: `**<@${targetUserId}>** ha sido silenciado por **10 minutos**.`,
         fields: [
           { name: 'Razón', value: reason },
           { name: 'Moderador', value: `<@${interaction.member.user.id}>` },

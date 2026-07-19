@@ -10,13 +10,14 @@ module.exports = {
     },
   ],
   execute(interaction) {
-    const targetUserId = interaction.data.options?.find(o => o.name === 'usuario')?.value || interaction.member.user.id;
-    const targetUser = interaction.data.options?.find(o => o.name === 'usuario')?.value
-      ? null // Need to resolve from the option
-      : interaction.member.user;
+    let user;
 
-    // For simplicity, use the invoking user's info if no target specified
-    const user = targetUser || interaction.member.user;
+    if (interaction.data.options?.length) {
+      const targetId = interaction.data.options.find(o => o.name === 'usuario')?.value;
+      user = interaction.data.resolved?.users?.[targetId] || { id: targetId, username: 'Usuario' };
+    } else {
+      user = interaction.member.user;
+    }
 
     const avatarUrl = user.avatar
       ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=1024`
