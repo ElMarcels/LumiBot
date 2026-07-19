@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "description": "Discord slash commands bot hosted on Vercel",
   "scripts": {
-    "deploy-commands": "node scripts/deploy-commands.js"
+    "deploy": "node scripts/deploy-commands.js"
   },
   "dependencies": {
+    "dotenv": "^17.4.2",
     "tweetnacl": "^1.0.3"
   },
   "engines": {

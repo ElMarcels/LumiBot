@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const DISCORD_API_BASE = 'https://discord.com/api/v10';
 const DISCORD_TOKEN = process.env.DISCORD_TOKEN;
 const APPLICATION_ID = process.env.DISCORD_APPLICATION_ID;
