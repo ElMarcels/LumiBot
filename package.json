@@ -1,0 +1,14 @@
+{
+  "name": "lumibot",
+  "version": "1.0.0",
+  "description": "Discord slash commands bot hosted on Vercel",
+  "scripts": {
+    "deploy-commands": "node scripts/deploy-commands.js"
+  },
+  "dependencies": {
+    "tweetnacl": "^1.0.3"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
