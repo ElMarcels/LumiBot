@@ -89,7 +89,7 @@ module.exports = async (req, res) => {
         return res.status(200).json({
           type: INTERACTION_RESPONSE_TYPE.CHANNEL_MESSAGE,
           data: {
-            content: '❌ Hubo un error al ejecutar este comando.',
+            content: `❌ Error en /${commandName}: \`${error.message || error}\``,
             flags: 64,
           },
         });
