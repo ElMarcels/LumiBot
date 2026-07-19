@@ -43,7 +43,7 @@ module.exports = {
     });
 
     const createdAt = new Date(
-      (BigInt(user.id) >> 22n) + 1420070400000n
+      Number(BigInt(user.id) / 4194304n) + 1420070400000
     ).toLocaleDateString('es-ES', {
       year: 'numeric',
       month: 'long',
